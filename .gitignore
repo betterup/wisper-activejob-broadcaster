@@ -1,3 +1,7 @@
+# bundler state
+vendor/bundle/
+vendor/ruby/
+
 /.bundle/
 /.yardoc
 /_yardoc/
