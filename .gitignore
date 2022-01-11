@@ -1,6 +1,9 @@
+# bundler state
+vendor/bundle/
+vendor/ruby/
+
 /.bundle/
 /.yardoc
-/Gemfile.lock
 /_yardoc/
 /coverage/
 /doc/
