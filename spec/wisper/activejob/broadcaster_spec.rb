@@ -40,7 +40,7 @@ describe Wisper::Broadcasters::ActiveJobBroadcaster do
           # no-op
         end
 
-        def foo?
+        def perform_foo?
           true
         end
       end
@@ -64,7 +64,7 @@ describe Wisper::Broadcasters::ActiveJobBroadcaster do
             # no-op
           end
 
-          def foo?
+          def perform_foo?
             false
           end
         end
@@ -73,6 +73,31 @@ describe Wisper::Broadcasters::ActiveJobBroadcaster do
       it 'skips the job' do
         expect(subscriber_class).not_to receive(:perform_later)
         broadcast
+      end
+    end
+
+    context 'when the predicate raises an error' do
+      let(:subscriber_class) do
+        Class.new do
+          include Wisper::ActiveJob::Subscriber
+
+          def self.perform_later(_event, _args)
+            # no-op
+          end
+
+          def foo
+            # no-op
+          end
+
+          def perform_foo?
+            raise 'some error'
+          end
+        end
+      end
+
+      it 'skips the job and raises an error', :aggregate_failures do
+        expect(subscriber_class).not_to receive(:perform_later)
+        expect { broadcast }.to raise_error(Wisper::Broadcasters::ActiveJobBroadcaster::DispatchError)
       end
     end
   end
