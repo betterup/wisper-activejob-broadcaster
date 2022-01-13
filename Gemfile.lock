@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    wisper-activejob-broadcaster (0.2.1)
+    wisper-activejob-broadcaster (0.3.1)
       activejob
       wisper
 
