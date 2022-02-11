@@ -74,6 +74,33 @@ describe Wisper::Broadcasters::ActiveJobBroadcaster do
         expect(subscriber_class).not_to receive(:perform_later)
         broadcast
       end
+
+      context 'when the predicate is private' do
+        let(:subscriber_class) do
+          Class.new do
+            include Wisper::ActiveJob::Subscriber
+
+            def self.perform_later(_event, _args)
+              # no-op
+            end
+
+            def foo
+              # no-op
+            end
+
+            private
+
+            def perform_foo?
+              false
+            end
+          end
+        end
+
+        it 'skips the job' do
+          expect(subscriber_class).not_to receive(:perform_later)
+          broadcast
+        end
+      end
     end
 
     context 'when the predicate raises an error' do
